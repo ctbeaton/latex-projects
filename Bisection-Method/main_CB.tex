@@ -1,0 +1,297 @@
+\documentclass{article}
+\usepackage{2130,amsmath,amssymb,graphicx}
+\usepackage[table]{xcolor}
+\usepackage{comment}
+\usepackage{amsmath}
+\usepackage{listings}
+%\setlength{\arrayrulewidth}{0.5mm}
+\renewcommand{\arraystretch}{1.5}
+
+\title{The Bisection Method}
+\author{Chelsea Beaton}
+\date{February 2022}
+
+\begin{document}
+\maketitle
+
+\section{Abstract}
+Root-finding is one of the most fundamental problems in mathematics. There are many different methods of finding the roots of a function, such as the bisection method, the method of false position, and the quadratic formula. Each method has advantages and disadvantages which should be taken into consideration when choosing which one to use. When dealing with one-dimensional functions, the bisection method often offers a reliable and simple method of root-finding, which can be made more efficient by implementing it with a computer code. However, there are some instances where using the method of false position or the quadratic formula would be more beneficial. 
+
+
+
+\section{Introduction}
+When asked to find the roots of a function, there are several methods to choose from. The bisection method is one of the simplest ways to find the root of a function. Although the bisection method is not the most efficient technique used, it is widely taught and studied because it is guaranteed to work if the function is continuous and has two points in an interval $[a,b]$ in which the signs of $f(a)$ and $f(b)$ are different. This is because the bisection method is based on the "intermediate value theorem for continuous functions."\cite{byjus}
+
+%Talk about why we implement computer code to verify algorithms
+\par Although the bisection method is a reliable method of root-finding, sometimes we need to verify that the roots found are accurate. Depending on how accurate a root needs to be, the bisection method may have to be repeated many times. The more the method is repeated, the more accurate the root will be. Because of this, it is beneficial to implement a computer code that solves functions using the bisection method to save time and increase the level of accuracy we can achieve. 
+
+
+
+\section{Method}
+%Include detailed description about how the bisection method works, explain the code used, and why the margin of error matters and how the root changes if we have a different one. Maybe talk about the intermediate theorem for continuous functions.
+
+\subsection{The Bisection Method Algorithm}
+The bisection method is a successive approximation method that narrows down an interval that contains a root of the function $f(x)$. \cite{mathcs} If $f(x)$ contains an interval $[a,b]$ for which $f(a)$ and $f(b)$ have different signs, then $f(x)$ must have at least one real root on this interval. To get our first approximation of the root, we find the midpoint of the interval $[a,b]$ by finding $m=\frac{a+b}{2}$. If $f(m)=0$ then we have found the root. If $f(m)\ne 0$, we take the sign of $f(m)$ and compare it to the sign of $f(a)$. If they are the same, then we let $a = m$ since the root of $f(x)$ must lie on the interval $[m,b]$. Otherwise, if $f(m)$ and $f(b)$ have the same sign, we let $b=m$ since the root must lie on the interval $[a,m]$. We then take the appropriate interval, compute its midpoint to obtain a new approximation of the root, and repeat this process several times, depending on how accurate we want the root to be.
+
+\subsection{Stopping Criteria and Rate of Convergence}
+Before using the bisection method to estimate a root of a function, we must decide how accurate the root should be. Stopping criteria refers to conditions that must be reached in order to stop the execution of the algorithm.\cite{post} Deciding what an appropriate stopping criteria is will depend on the person. The root of a function is the value that makes the function equal 0, $f(x)=0$. This means that when we plug in the estimated root of our function, $f(x)$ should be as close to 0 as possible to be the most accurate. We can compare this value to a stopping criteria we have chosen, based on how accurate we want the root to be. For example, when calculating the root of a function, say $m$, if we choose a stopping criteria, $e = 0.01$, we should only stop our algorithm when $f(m)$ produces a value less than our stopping criteria, $0.01$. The smaller we make this number, the more accurate the final root will be.
+\par When deciding what stopping criteria is appropriate for the level of accuracy desired, we may want to consider the rate of convergence of the bisection method for a particular stopping criteria. The rate of convergence will refer to the number of iterations needed for our root to reach our desired stopping criteria. In order to estimate the number of iterations needed to find the root of an equation, we can use the formula:
+\begin{equation*}
+    \frac{b-a}{2^{(n+1)}}<e
+\end{equation*}
+
+\begin{equation*}
+    n > \frac{\ln{(b-a)}-\ln{(e)}}{\ln{(2)}}-1
+\end{equation*}
+where n is the number of iterations needed to find a root and e is our designated stopping criteria.
+
+\subsection{Implementing the Bisection Method} 
+The algorithm for the bisection method can be easily implemented with a computer program. We want the user to be able to input the interval they want to investigate. $a$ and $b$ will be inputs to our bisection method function. The function should make sure that $f(a)$ and $f(b)$ have different signs, and output a valid warning if they don't. Now we will compute the midpoint, m, of our first interval by setting $m=\frac{a-b}{2}$. The function should now check if we have found the root of the interval by computing $f(m)$. If $f(m)=0$, we have found the root and the function can return $m$. If $f(m)\ne 0$, the function should continue. Now we check if $f(m)$ has the same sign as $f(a)$ or $f(b)$. If $f(a)*f(m)>0$, we know that they have the same sign, so $a=m$. Otherwise, $f(b)$ and $f(m)$ have the same sign, so $b=m$. Now that a new interval has been found, the function should output the new interval, the margin of error and the estimation of the root. We have chosen $0.001$ as our stopping condition so these steps are repeated using a while loop, until $f(m)<0.001$. The number of iterations is incremented each time. When $f(m)$ becomes less than $0.001$, the while loop is exited, and the final estimation of the root and total number of iterations is output.
+
+
+
+\section{Results}
+
+The tables below display the output of the computer code implementing the bisection method. Table \ref{table: 1} shows the results of finding the positive root of the function, and Table \ref{table: 2} shows the results of finding the negative root of the function.
+
+
+\begin{table}[hbt!]
+\centering
+\scalebox{0.9}{
+\begin{tabular}{ |c|c|c|c|c| }
+\hline
+Iteration&Endpoint 1 (a)&Endpoint 2 (b)&Margin of error (e)&Estimated root \\
+\hline
+1 & 1.0 & 2.0 & 2.0 & 1.0 \\
+\hline
+2 & 1.5 & 2.0 & 0.25 & 1.5 \\
+\hline
+3 & 1.5 & 1.75 & 1.1875 & 1.75 \\
+\hline
+4 & 1.5 & 1.625 & 0.421875 & 1.625 \\
+\hline
+5 & 1.5 & 1.5625 & 0.07421875 & 1.5625 \\
+\hline
+6 & 1.53125 & 1.5625 & 0.09082031255 & 1.53125 \\
+\hline
+7 & 1.546875 & 1.5625 & 0.009033203125 & 1.546875 \\
+\hline
+8 & 1.546875 & 1.5546875 & 0.03240966796875 & 1.5546875 \\
+\hline
+9 & 1.546875 & 1.55078125 & 0.0116424560546875 & 1.55078125 \\
+\hline
+10 & 1.546875 & 1.548828125 & 0.001293182373046875 & 1.548828125 \\
+\hline
+11 & 1.5478515625 & 1.548828125 & 0.0038728713989257812 & 1.5478515625 \\ 
+\hline
+12 & 1.54833984375 & 1.548828125 & 0.0012905597686767578 & 1.54833984375 \\
+\hline
+13 & 1.54833984375 & 1.548583984375 & 0.1324882507324219e-06 & 1.548583984375 \\
+\hline
+\end{tabular}}
+\caption{Estimation of positive root for $f(x)=3x^2-4x-1$, with beginning interval [0,2] and stopping criteria $0.001$.}
+\label{table: 1}
+\end{table}
+
+\clearpage
+
+\begin{table}
+\centering
+\scalebox{0.9}{
+\begin{tabular}{ |c|c|c|c|c| }
+\hline
+Iteration&Endpoint 1 (a)&Endpoint 2 (b)&Margin of error (e)&Estimated root \\
+\hline
+1 & -1.0 & 0.0 & 6.0 & -1.0 \\
+\hline
+2 & -0.5 & 0.0 & 1.75 & -0.5 \\ 
+\hline
+3 & -0.25 & 0.0 & 0.1875 & -0.25 \\
+\hline
+4 & -0.25 & -0.125 & 0.453125 & -0.125 \\
+\hline
+5 & -0.25 & -0.1875 & 0.14453125 & -0.1875 \\
+\hline
+6 & -0.21875 & -0.1875 & 0.0185546875 & -0.21875\\
+\hline
+7 & -0.21875 & -0.203125 & 0.063720703125 & -0.203125\\
+\hline
+8 & -0.21875 & -0.2109375 & 0.02276611328125 & -0.2109375\\
+\hline
+9 & -0.21875 & -0.21484375 & 0.00021514892578125 & -0.21484375\\
+\hline
+10 & -0.216796875 & -0.21484375 & 0.008190155029296875 & -0.216796875\\
+\hline
+11 & -0.2158203125 & -0.21484375 & 0.0030164718627929688 & -0.2158203125\\
+\hline
+12 & -0.21533203125 & -0.21484375 & 0.0004317760467529297 & -0.21533203125\\
+\hline
+\end{tabular}}
+\caption{Estimation of negative root for $f(x)=3x^2-4x-1$, with beginning interval [0,2] and stopping criteria $0.001$.}
+\label{table: 2}
+\end{table}
+
+
+\section{Analysis}
+%Include advantages and disadvantages of the bisection method and the method of false positions, compare the number of iterations needed for bisection method and method of false positions, how one advantage of the quadratic formula is that it can easily be derived if forgotten (include derivation).
+
+\subsection{Guaranteed Convergence of the Bisection Method}
+The bisection method is guaranteed to find a root of continuous functions in some interval $[a,b]$ if for some values of $a$ and $b$, $f(a)$ and $f(b)$ have different signs. This is due to the intermediate value theorem for continuous functions. This theorem states that "for any function $f$ that is continuous over the interval $[a,b]$, the function will take any value between $f(a)$ and $f(b)$ over the interval. More formally, it means that for any value $L$ between $f(a)$ and $f(b)$, there's a value $c$ in $[a,b]$ for which $f(c)=L$."\cite{khan} If $f(a)$ and $f(b)$ have different signs, at some point the function crossed the x-axis, and for some value $c$ within $[a,b]$, $f(c)=0$. The value $c$ would be the root of the function.
+
+\subsection{Other Root-Finding Algorithms}
+When handling the problem of root-finding, there are many methods to choose from. The bisection method belongs to a class called bracketing methods. These methods use increasingly smaller intervals to determine the root of a function.\cite{vlad} The method of false position also belongs to this class. 
+\par The method of false position uses a similar algorithm as the bisection method. When using the false position method, an interval $[a,b]$ is chosen and $f(a)$ and $f(b)$ must have different signs. The main difference between this method and the bisection method is that we compute the secant between $(a, f(a))$ and $(b, f(b))$. Point $c$ refers to where this secant crosses the x-axis, and depending on the signs of $f(a)$, $f(b)$ and $f(c)$, either $a$ or $b$ is replaced with $c$. We then take the new interval, find the secant of that and continue until we have reached our desired level of accuracy.
+\par The quadratic formula is another common method of root-finding. This method is commonly the first introduced when dealing with root-finding due to its straightforward nature. The roots of a quadratic equation in the form $f(x)=ax^2+bx+c$ can be found by plugging in the values of $a$, $b$ and $c$ into the equation $x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}$. This equation is easily derivable, as shown in the following steps:
+\begin{itemize}
+    \item First, start with a quadratic equation of the form 
+    \begin{equation*}
+        ax^2+bx+c=0.
+    \end{equation*}
+    \item To begin the derivation of the quadratic formula, divide both sides of the equation by $a$ to get 
+    \begin{equation*}
+        x^2+\frac{b}{a}x+\frac{c}{a}=0.
+    \end{equation*}
+    \item Subtract $\frac{c}{a}$ from both sides of the equation to get 
+    \begin{equation*}
+        x^2+\frac{b}{a}x=-\frac{c}{a}.
+    \end{equation*}
+    \item Complete the square and add $\frac{b^2}{4a^2}$ to both sides. This gives us 
+    \begin{equation*}
+        x^2+\frac{b}{a}x+\frac{b^2}{4a^2}=\frac{b^2}{4a^2}-\frac{c}{a}.
+    \end{equation*}
+    \item Factor the left side of the equation to obtain 
+    \begin{equation*}
+        (x+\frac{b}{2a})^2=\frac{b^2}{4a^2}-\frac{c}{a}.
+    \end{equation*}
+    \item Combining the fraction on the right side gives 
+    \begin{equation*}
+        (x+\frac{b}{2a})^2=\frac{b^2-4ac}{4a^2}.
+    \end{equation*}
+    \item Take the square root of both sides of the equation to get 
+    \begin{equation*}
+        x+\frac{b}{2a}=\pm\frac{\sqrt{b^2-4ac}}{2a}.
+    \end{equation*}
+    \item Solving for x by subtracting $\frac{b}{2a}$ from both sides to get 
+    \begin{equation*}
+        x=-\frac{b}{2a}\pm\frac{\sqrt{b^2-4ac}}{2a}.
+    \end{equation*}
+    \item Finally, combining the fractions on the right side gives the final formula,
+    \begin{equation*}
+        x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}.
+    \end{equation*}
+\end{itemize}
+
+\subsection {Advantages and Disadvantages of Root-Finding Algorithms}
+When deciding which method to use when finding the roots of a function, it is beneficial to know the advantages and disadvantages of each.
+\par\noindent Advantages and disadvantages of using the bisection method\cite{codeSansar}:
+\begin{itemize}
+    \item Advantages:
+    \begin{itemize}
+        \item Convergence is guaranteed.
+        \item Does not involve complex computations.
+        \item Easy to create a computer program implementing the algorithm.
+    \end{itemize}
+    \item Disadvantages:
+    \begin{itemize}
+        \item Converges slowly.
+        \item Does not adapt well to higher dimensions.
+        \item If the function has equal roots the method fails. This is because in order for the bisection method to work, the endpoints have to have different signs. The only way for this to occur is if one of the endpoints is the actual root.
+    \end{itemize}
+\end{itemize}
+
+\noindent Advantages and disadvantages of using the false position method:
+\begin{itemize}
+    \item Advantages:
+    \begin{itemize}
+        \item Usually converges faster than the bisection method.
+        \item Adapts more easily to higher dimension functions.
+        \item Easy to create a computer program implementing the algorithm.
+    \end{itemize}
+    \item Disadvantages:
+    \begin{itemize}
+        \item Involves more complex calculations (example: finding $f(a)$ and $f(b)$).
+        \item We don't know when the method of false position will converge faster than the bisection method.
+        \item If the function given has equal roots the method fails. This is because in order for the false position method to work, the endpoints have to have different signs. The only way for this to occur is if one of the endpoints is the actual root.
+    \end{itemize}
+\end{itemize}
+
+\noindent Advantages and disadvantages of using the quadratic formula:
+\begin{itemize}
+    \item Advantages:
+    \begin{itemize}
+        \item Straightforward calculations.
+        \item If the formula is forgotten, it is easy to derive.
+        \item Able to deal with complex roots.
+        \item Easy to create a computer program implementing the algorithm.
+    \end{itemize}
+    \item Disadvantages:
+    \begin{itemize}
+        \item Difficult to remember.
+        \item Does not adapt to higher dimension functions.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Comparing the Rate of Convergence of the Bisection Method and the Method of False Position}
+One advantage of using the method of false position is it usually converges faster than the bisection method. This can be seen by creating a computer program to implement the false position method and directly comparing the output of the code to the output of the bisection method program.
+\par When finding the positive root of the function $f(x)=3x^2-4x-1$ with a stopping criteria of $0.001$ and a starting interval of $[0,2]$, the following output can be observed:
+
+\begin{table}[hbt!]
+\centering
+\scalebox{0.9}{
+\begin{tabular}{ |c|c|c|c|c| }
+\hline
+Iteration&Endpoint 1 (a)&Endpoint 2 (b)&Margin of error (e)&Estimated root \\
+\hline
+1 & 0.5 & 2.0 & 2.25 & 0.5 \\
+\hline
+2&1.1428571428571428&2.0&1.65306122&1.1428571428571428 \\
+\hline
+3&1.4473684210526314&2.0&0.50484764&1.4473684210526314 \\
+\hline
+4&1.5269709543568464&2.0&0.112962931&1.5269709543568464 \\
+\hline
+5&1.5441361916771752&2.0&0.023475031&1.5441361916771752 \\
+\hline
+6&1.5476756345660234&2.0&0.004802928&1.5476756345660234 \\
+\hline
+7&1.5483986376255758&2.0&0.000979527&1.5483986376255758\\
+\hline
+\end{tabular}}
+\caption{Using the method of false position to estimate the positive root for the function $f(x)=3x^2-4x-1$.}
+\label{table: 3}
+\end{table}
+As seen when referencing Table \ref{table: 1}, the false position method takes 6 less iterations to find a root for the function $f(x)=3x^2-4x-1$.
+
+\section{Conclusion}
+The bisection method can be a beneficial technique to learn when studying root-finding, due to its guaranteed convergence in most cases and its simple algorithm. Implementing this algorithm using a computer program is beneficial and simple. In doing this, the bisection method can be used to find a root to a certain degree of accuracy, based on the stopping criteria implemented, without having to repeat the process many times by hand. Other techniques, such as the method of false position and the quadratic formula are also beneficial to learn, as they both have their own advantages.
+\par Although the three methods of root-finding mentioned in this paper are adequate for finding the roots of one-dimensional functions, they do not adapt well when trying to find the roots of multi-variable functions. Different techniques need to be studied when dealing with multi-variable functions, but the bisection method is one of the most simple methods to learn when first introduced to the idea of root-finding.
+
+
+\section{Appendix}
+The following code was used to implement the repeated process of the bisection method:
+
+\begin{lstlisting}
+    while abs(func(m)) > 0.001:
+        m = (a+b)/2
+        if func(m) == 0:
+            print("The exact root is: ", m)
+            print("Total iterations: ", iteration+1)
+            return
+    
+        if func(a) * func(m) > 0:
+            a = m
+        else:
+            b = m
+            
+        print("Endpoint 1 (a): ", a)
+        print("Endpoint 2 (b): ", b)
+        print("Margin of error: ", abs(func(m)))
+        print("Estimation of root: ", m)
+        print()
+        iteration += 1
+\end{lstlisting}
+
+
+\bibliographystyle{abbrv}
+\bibliography{cite}
+\end{document}
